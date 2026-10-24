@@ -1,32 +1,20 @@
 # YYLibrary
 
-YYシリーズとYYSortで共通利用するRustライブラリと開発ツールです。
+YYシリーズとYYSortで共用するRustライブラリと開発ツールです。
 
-- `crates/yy-encoding`: 日本語、Unicode、EBCDIC、外部対応表、文字コード検出と不正バイトの可逆変換。
-- `tools/gen-tables`: 公開対応表から文字コード変換テーブルを生成するツール。
+- **yy-encoding**: Unicode、日本語、EBCDIC、外部対応表、文字コード検出、不正バイトの保持。
+- **gen-tables**: 公開対応表から生成済みコーデックテーブルを再生成する保守用ツール。
 
-## 利用
+## 文書
 
-CargoのGit依存で使用します。再現可能なビルドのため、`rev`には採用したコミットの完全SHAを指定します。
+| 目的 | 入口 |
+| --- | --- |
+| アプリからライブラリを利用する | [利用者向け：依存設定と公開API](docs/user/README.md) |
+| ライブラリ自体を実装・保守する | [開発者向け：内部仕様、生成、試験、CI](docs/developer/README.md) |
+| 共有化の判断・作業結果を調べる | [検討経緯・作業記録](docs/history/README.md) |
 
-```toml
-yy-encoding = { git = "https://github.com/ykwyuta/YYLibrary", rev = "<commit SHA>" }
-```
+Rust 1.88以降。利用側はCargo.tomlの`git`と完全な`rev`、Cargo.lockを固定します。
+コードと対応表は本リポジトリで管理し、利用側へ実装の複製を置きません。
 
-利用側のCargo.lockも更新・保存してください。通常のCargoビルドがライブラリを取得するため、
-利用者が別途cloneしたりサブモジュールを初期化したりする必要はありません。
-ライブラリの更新は本リポジトリで行い、利用側のrevとCargo.lockを明示的に更新します。
-
-## 開発と検証
-
-```text
-cargo fmt --all -- --check
-cargo clippy --workspace --all-targets --locked -- -D warnings
-cargo test --workspace --locked
-```
-
-WindowsとLinuxのCIで同じ検査を行います。文字コードテーブルは生成済みのものを同梱しており、
-通常のビルド時に対応表の取得や再生成は不要です。
-生成方法は[gen-tablesの説明](tools/gen-tables/src/main.rs)を参照してください。
-GPL-3.0-or-later。GPL本文はCOPYING、追加許可はCOPYING.EXCEPTIONに記載しています。
-第三者の対応表の著作権・ライセンス表記は生成ソースと各クレートのNOTICEに保持しています。
+[GPL-3.0-or-later](COPYING)と[追加許可](COPYING.EXCEPTION)。
+対応表の第三者表記は[yy-encodingのNOTICE](crates/yy-encoding/NOTICE.md)および生成ソースに保持します。
